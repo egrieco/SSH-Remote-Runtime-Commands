@@ -27,7 +27,7 @@ if {[file readable "$rc_file_path"] == 1} {
 	foreach rc_line $rc_lines {
 		if [regexp {^\s*$} $rc_line] {continue}
 		if [regexp {^\s*#} $rc_line] {continue}
-		puts [string trim $rc_line]
+		send "[string trim $rc_line]\r"
 	}
 } else {
 	puts "Cannot read remote RC file: $rc_file_path"
