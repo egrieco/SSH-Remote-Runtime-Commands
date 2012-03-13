@@ -16,9 +16,13 @@ expect "$remote_server%"
 # :TODO: should look for "." or "source" lines which include other files and override those by reading them and sending their content
 if {[file readable "$rc_file_path"] == 1} {
 	puts "Reading configuration from: $rc_file_path"
+
+	# read file
 	set rc_file [open $rc_file_path r]
 	set rc_file_data [read $rc_file]
 	close $rc_file
+
+	# iterate over file
 	set rc_lines [split $rc_file_data "\n"]
 	foreach rc_line $rc_lines {
 		if [regexp {^\s*$} $rc_line] {continue}
