@@ -7,6 +7,7 @@ if {$remote_server == ""} {
 	exit
 }
 set rc_file_path "$env(HOME)/.remote.zshrc"
+set max_lines 20
 
 # start ssh
 spawn ssh $remote_server
@@ -28,11 +29,14 @@ if {[file readable "$rc_file_path"] == 1} {
 	close $rc_file
 
 	# iterate over file
+	set line_count 0
 	set rc_lines [split $rc_file_data "\n"]
 	foreach rc_line $rc_lines {
+		set line_count [incr $line_count]
 		if [regexp {^\s*$} $rc_line] {continue}
 		if [regexp {^\s*#} $rc_line] {continue}
 		send "[string trim $rc_line]\r"
+		if {$line_count >= $max_lines} {break}
 	}
 	# this is a temporary workaround until we can properly hide send data and output from ssh
 	send "clear\r"
