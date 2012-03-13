@@ -13,7 +13,6 @@ spawn ssh $remote_server
 expect "$remote_server%"
 
 # read rc file and execute its commands in the remote shell
-# :TODO: should look for blank or commented lines and skip them
 # :TODO: should look for "." or "source" lines which include other files and override those by reading them and sending their content
 if {[file readable "$rc_file_path"] == 1} {
 	puts "Reading configuration from: $rc_file_path"
@@ -22,9 +21,9 @@ if {[file readable "$rc_file_path"] == 1} {
 	close $rc_file
 	set rc_lines [split $rc_file_data "\n"]
 	foreach rc_line $rc_lines {
-		if {$rc_line == ""} {continue}
-		if [ regexp {\s#} $rc_line ] {continue}
-		puts $rc_line
+		if [regexp {^\s*$} $rc_line] {continue}
+		if [regexp {^\s*#} $rc_line] {continue}
+		puts [string trim $rc_line]
 	}
 } else {
 	puts "Cannot read remote RC file: $rc_file_path"
