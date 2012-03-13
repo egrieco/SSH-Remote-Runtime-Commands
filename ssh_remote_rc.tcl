@@ -18,11 +18,14 @@ expect "$remote_server%"
 if {[file readable "$rc_file_path"] == 1} {
 	puts "Reading configuration from: $rc_file_path"
 	set rc_file [open $rc_file_path r]
-	while {[set rc_line [gets $rc_file]] != ""} {
-		send "$rc_line\r"
-		expect "$remote_server%"
-	}
+	set rc_file_data [read $rc_file]
 	close $rc_file
+	set rc_lines [split $rc_file_data "\n"]
+	foreach rc_line $rc_lines {
+		if {$rc_line == ""} {continue}
+		if [ regexp {\s#} $rc_line ] {continue}
+		puts $rc_line
+	}
 } else {
 	puts "Cannot read remote RC file: $rc_file_path"
 }
