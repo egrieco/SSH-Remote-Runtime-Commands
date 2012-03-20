@@ -11,7 +11,10 @@ set rc_file_path "$env(HOME)/.remote.zshrc"
 # start ssh
 spawn ssh $remote_server
 # changing this to a simpler pattern to match since a direct hostname match is not possible. Higher level domains are not printed on the host (at least at work).
-expect "% "
+expect {
+	-ex "Are you sure you want to continue connecting (yes/no)?" {send "yes\r"}
+	"% "
+}
 
 # read rc file and execute its commands in the remote shell
 # :TODO: should look for "." or "source" lines which include other files and override those by reading them and sending their content
